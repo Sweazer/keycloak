@@ -56,7 +56,7 @@ public class CookieTokenStore {
 
         try {
             // Skip check if token is active now. It's supposed to be done later by the caller
-            AccessToken accessToken = RSATokenVerifier.verifyToken(accessTokenString, deployment.getRealmKey(), deployment.getRealmInfoUrl(), false, true);
+            AccessToken accessToken = RSATokenVerifier.verifyToken(accessTokenString, deployment.getRealmKey(), deployment.getRealmInfoUrl(), false, false);
             IDToken idToken;
             if (idTokenString != null && idTokenString.length() > 0) {
                 try {

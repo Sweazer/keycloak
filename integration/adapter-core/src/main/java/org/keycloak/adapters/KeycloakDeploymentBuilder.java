@@ -89,7 +89,7 @@ public class KeycloakDeploymentBuilder {
         }
         deployment.setAuthServerBaseUrl(adapterConfig);
 
-        log.debug("Use authServerUrl: " + deployment.getAuthServerBaseUrl() + ", tokenUrl: " + deployment.getTokenUrl() + ", relativeUrls: " + deployment.getRelativeUrls());
+        log.debug("Use authServerUrl: " + deployment.getAuthServerBaseUrl() + ", codeUrl: " + deployment.getCodeUrl() + ", refreshUrl: " + deployment.getRefreshUrl() + ", relativeUrls: " + deployment.getRelativeUrls());
         return deployment;
     }
 

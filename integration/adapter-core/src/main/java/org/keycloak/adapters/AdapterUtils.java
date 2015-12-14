@@ -43,7 +43,7 @@ public class AdapterUtils {
                     return UriUtils.getOrigin(browserRequestURL);
                 case BROWSER_ONLY:
                     // Resolve baseURI from the codeURL (This is already non-relative and based on our hostname)
-                    return UriUtils.getOrigin(deployment.getTokenUrl());
+                    return UriUtils.getOrigin(deployment.getCodeUrl());
                 default:
                     return "";
             }

@@ -63,48 +63,49 @@ public class DirectAccessGrantsLoginModule extends AbstractKeycloakLoginModule {
     }
 
     protected Auth directGrantAuth(String username, String password) throws IOException, VerificationException {
-        String authServerBaseUrl = deployment.getAuthServerBaseUrl();
-        URI directGrantUri = KeycloakUriBuilder.fromUri(authServerBaseUrl).path(ServiceUrlConstants.TOKEN_PATH).build(deployment.getRealm());
-        HttpPost post = new HttpPost(directGrantUri);
-
-        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-        formparams.add(new BasicNameValuePair(OAuth2Constants.GRANT_TYPE, OAuth2Constants.PASSWORD));
-        formparams.add(new BasicNameValuePair("username", username));
-        formparams.add(new BasicNameValuePair("password", password));
-
-        ClientCredentialsProviderUtils.setClientCredentials(deployment, post, formparams);
-
-        UrlEncodedFormEntity form = new UrlEncodedFormEntity(formparams, "UTF-8");
-        post.setEntity(form);
-
-        HttpClient client = deployment.getClient();
-        HttpResponse response = client.execute(post);
-        int status = response.getStatusLine().getStatusCode();
-        HttpEntity entity = response.getEntity();
-        if (status != 200) {
-            StringBuilder errorBuilder = new StringBuilder("Login failed. Invalid status: " + status);
-            if (entity != null) {
-                InputStream is = entity.getContent();
-                Map<String, String> errors = (Map<String, String>) JsonSerialization.readValue(is, Map.class);
-                errorBuilder.append(", OAuth2 error. Error: " + errors.get(OAuth2Constants.ERROR))
-                        .append(", Error description: " + errors.get(OAuth2Constants.ERROR_DESCRIPTION));
-            }
-            String error = errorBuilder.toString();
-            log.warn(error);
-            throw new IOException(error);
-        }
-
-        if (entity == null) {
-            throw new IOException("No Entity");
-        }
-
-        InputStream is = entity.getContent();
-        AccessTokenResponse tokenResponse = JsonSerialization.readValue(is, AccessTokenResponse.class);
-
-        // refreshToken will be saved to privateCreds of Subject for now
-        refreshToken = tokenResponse.getRefreshToken();
-
-        return bearerAuth(tokenResponse.getToken());
+        throw new UnsupportedOperationException("Needs adoptions for compatibility with Keycloak 1.1.0.Final");
+//        String authServerBaseUrl = deployment.getAuthServerBaseUrl();
+//        URI directGrantUri = KeycloakUriBuilder.fromUri(authServerBaseUrl).path(ServiceUrlConstants.TOKEN_PATH).build(deployment.getRealm());
+//        HttpPost post = new HttpPost(directGrantUri);
+//
+//        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+//        formparams.add(new BasicNameValuePair(OAuth2Constants.GRANT_TYPE, OAuth2Constants.PASSWORD));
+//        formparams.add(new BasicNameValuePair("username", username));
+//        formparams.add(new BasicNameValuePair("password", password));
+//
+//        ClientCredentialsProviderUtils.setClientCredentials(deployment, post, formparams);
+//
+//        UrlEncodedFormEntity form = new UrlEncodedFormEntity(formparams, "UTF-8");
+//        post.setEntity(form);
+//
+//        HttpClient client = deployment.getClient();
+//        HttpResponse response = client.execute(post);
+//        int status = response.getStatusLine().getStatusCode();
+//        HttpEntity entity = response.getEntity();
+//        if (status != 200) {
+//            StringBuilder errorBuilder = new StringBuilder("Login failed. Invalid status: " + status);
+//            if (entity != null) {
+//                InputStream is = entity.getContent();
+//                Map<String, String> errors = (Map<String, String>) JsonSerialization.readValue(is, Map.class);
+//                errorBuilder.append(", OAuth2 error. Error: " + errors.get(OAuth2Constants.ERROR))
+//                        .append(", Error description: " + errors.get(OAuth2Constants.ERROR_DESCRIPTION));
+//            }
+//            String error = errorBuilder.toString();
+//            log.warn(error);
+//            throw new IOException(error);
+//        }
+//
+//        if (entity == null) {
+//            throw new IOException("No Entity");
+//        }
+//
+//        InputStream is = entity.getContent();
+//        AccessTokenResponse tokenResponse = JsonSerialization.readValue(is, AccessTokenResponse.class);
+//
+//        // refreshToken will be saved to privateCreds of Subject for now
+//        refreshToken = tokenResponse.getRefreshToken();
+//
+//        return bearerAuth(tokenResponse.getToken());
     }
 
     @Override

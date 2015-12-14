@@ -16,7 +16,7 @@ import java.security.PublicKey;
  */
 public class RSATokenVerifier {
     public static AccessToken verifyToken(String tokenString, PublicKey realmKey, String realmUrl) throws VerificationException {
-        return verifyToken(tokenString, realmKey, realmUrl, true, true);
+        return verifyToken(tokenString, realmKey, realmUrl, true, false);
     }
 
     public static AccessToken verifyToken(String tokenString, PublicKey realmKey, String realmUrl, boolean checkActive, boolean checkTokenType) throws VerificationException {

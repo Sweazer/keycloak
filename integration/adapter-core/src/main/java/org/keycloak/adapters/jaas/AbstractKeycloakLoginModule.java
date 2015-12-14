@@ -173,7 +173,7 @@ public abstract class AbstractKeycloakLoginModule implements LoginModule {
 
 
     protected Auth bearerAuth(String tokenString) throws VerificationException {
-        AccessToken token = RSATokenVerifier.verifyToken(tokenString, deployment.getRealmKey(), deployment.getRealmInfoUrl());
+        AccessToken token = RSATokenVerifier.verifyToken(tokenString, deployment.getRealmKey(), deployment.getRealm());
 
         boolean verifyCaller;
         if (deployment.isUseResourceRoleMappings()) {

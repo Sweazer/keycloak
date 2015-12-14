@@ -169,9 +169,12 @@ public class AdapterDeploymentContext {
             return (this.realmInfoUrl != null) ? this.realmInfoUrl : delegate.getRealmInfoUrl();
         }
 
-        @Override
-        public String getTokenUrl() {
-            return (this.tokenUrl != null) ? this.tokenUrl : delegate.getTokenUrl();
+        public String getCodeUrl() {
+            return (this.codeUrl != null) ? this.codeUrl : delegate.getCodeUrl();
+        }
+        
+        public String getRefreshUrl() {
+            return (this.refreshUrl != null) ? this.refreshUrl : delegate.getRefreshUrl();
         }
 
         @Override

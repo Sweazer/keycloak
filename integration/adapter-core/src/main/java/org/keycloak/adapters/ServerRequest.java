@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -70,7 +71,7 @@ public class ServerRequest {
         InputStream is = entity.getContent();
         if (is != null) is.close();
     }
-
+    
     public static AccessTokenResponse invokeAccessCodeToToken(KeycloakDeployment deployment, String code, String redirectUri, String sessionId) throws IOException, HttpFailure {
         List<NameValuePair> formparams = new ArrayList<>();
         redirectUri = stripOauthParametersFromRedirect(redirectUri);
@@ -82,7 +83,7 @@ public class ServerRequest {
             formparams.add(new BasicNameValuePair(AdapterConstants.CLIENT_SESSION_HOST, HostUtils.getHostName()));
         }
 
-        HttpPost post = new HttpPost(deployment.getTokenUrl());
+        HttpPost post = new HttpPost(deployment.getCodeUrl());
         ClientCredentialsProviderUtils.setClientCredentials(deployment, post, formparams);
 
         UrlEncodedFormEntity form = new UrlEncodedFormEntity(formparams, "UTF-8");
@@ -124,7 +125,7 @@ public class ServerRequest {
         formparams.add(new BasicNameValuePair(OAuth2Constants.GRANT_TYPE, OAuth2Constants.REFRESH_TOKEN));
         formparams.add(new BasicNameValuePair(OAuth2Constants.REFRESH_TOKEN, refreshToken));
 
-        HttpPost post = new HttpPost(deployment.getTokenUrl());
+        HttpPost post = new HttpPost(deployment.getRefreshUrl());
         ClientCredentialsProviderUtils.setClientCredentials(deployment, post, formparams);
 
         UrlEncodedFormEntity form = new UrlEncodedFormEntity(formparams, "UTF-8");

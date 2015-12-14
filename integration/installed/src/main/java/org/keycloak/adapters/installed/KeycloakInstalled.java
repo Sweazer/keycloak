@@ -194,7 +194,7 @@ public class KeycloakInstalled {
         refreshToken = tokenResponse.getRefreshToken();
         idTokenString = tokenResponse.getIdToken();
 
-        token = RSATokenVerifier.verifyToken(tokenString, deployment.getRealmKey(), deployment.getRealmInfoUrl());
+        token = RSATokenVerifier.verifyToken(tokenString, deployment.getRealmKey(), deployment.getRealm());
         if (idTokenString != null) {
             try {
                 JWSInput input = new JWSInput(idTokenString);

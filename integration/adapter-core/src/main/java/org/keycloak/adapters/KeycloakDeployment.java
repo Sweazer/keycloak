@@ -29,7 +29,8 @@ public class KeycloakDeployment {
     protected String authServerBaseUrl;
     protected String realmInfoUrl;
     protected KeycloakUriBuilder authUrl;
-    protected String tokenUrl;
+    protected String codeUrl;
+    protected String refreshUrl;
     protected KeycloakUriBuilder logoutUrl;
     protected String accountUrl;
     protected String registerNodeUrl;
@@ -151,7 +152,8 @@ public class KeycloakDeployment {
             log.debug("resolveNonBrowserUrls");
         }
 
-        tokenUrl = authUrlBuilder.clone().path(ServiceUrlConstants.TOKEN_PATH).build(getRealm()).toString();
+        codeUrl = authUrlBuilder.clone().path(ServiceUrlConstants.TOKEN_SERVICE_ACCESS_CODE_PATH).build(getRealm()).toString();
+        refreshUrl = authUrlBuilder.clone().path(ServiceUrlConstants.TOKEN_SERVICE_REFRESH_PATH).build(getRealm()).toString();
         logoutUrl = KeycloakUriBuilder.fromUri(authUrlBuilder.clone().path(ServiceUrlConstants.TOKEN_SERVICE_LOGOUT_PATH).build(getRealm()).toString());
         accountUrl = authUrlBuilder.clone().path(ServiceUrlConstants.ACCOUNT_SERVICE_PATH).build(getRealm()).toString();
         registerNodeUrl = authUrlBuilder.clone().path(ServiceUrlConstants.CLIENTS_MANAGEMENT_REGISTER_NODE_PATH).build(getRealm()).toString();
@@ -170,8 +172,12 @@ public class KeycloakDeployment {
         return authUrl;
     }
 
-    public String getTokenUrl() {
-        return tokenUrl;
+    public String getCodeUrl() {
+        return codeUrl;
+    }
+    
+    public String getRefreshUrl() {
+        return refreshUrl;
     }
 
     public KeycloakUriBuilder getLogoutUrl() {

@@ -134,28 +134,15 @@ public class OAuthRequestAuthenticator {
         }
 
         String loginHint = getQueryParamValue("login_hint");
-        url = UriUtils.stripQueryParam(url,"login_hint");
-
-        String idpHint = getQueryParamValue(AdapterConstants.KC_IDP_HINT);
-        url = UriUtils.stripQueryParam(url, AdapterConstants.KC_IDP_HINT);
-
-        String scope = getQueryParamValue(OAuth2Constants.SCOPE);
-        url = UriUtils.stripQueryParam(url, OAuth2Constants.SCOPE);
+        url = url.replaceFirst("[\\?&]login_hint=[^&]*$|login_hint=.*&", "");
 
         KeycloakUriBuilder redirectUriBuilder = deployment.getAuthUrl().clone()
-                .queryParam(OAuth2Constants.RESPONSE_TYPE, OAuth2Constants.CODE)
                 .queryParam(OAuth2Constants.CLIENT_ID, deployment.getResourceName())
                 .queryParam(OAuth2Constants.REDIRECT_URI, url)
                 .queryParam(OAuth2Constants.STATE, state)
                 .queryParam("login", "true");
         if(loginHint != null && loginHint.length() > 0){
             redirectUriBuilder.queryParam("login_hint",loginHint);
-        }
-        if (idpHint != null && idpHint.length() > 0) {
-            redirectUriBuilder.queryParam(AdapterConstants.KC_IDP_HINT,idpHint);
-        }
-        if (scope != null && scope.length() > 0) {
-            redirectUriBuilder.queryParam(OAuth2Constants.SCOPE, scope);
         }
 
         return redirectUriBuilder.build().toString();
@@ -312,7 +299,7 @@ public class OAuthRequestAuthenticator {
         refreshToken = tokenResponse.getRefreshToken();
         idTokenString = tokenResponse.getIdToken();
         try {
-            token = RSATokenVerifier.verifyToken(tokenString, deployment.getRealmKey(), deployment.getRealmInfoUrl());
+            token = RSATokenVerifier.verifyToken(tokenString, deployment.getRealmKey(), deployment.getRealm());
             if (idTokenString != null) {
                 try {
                     JWSInput input = new JWSInput(idTokenString);

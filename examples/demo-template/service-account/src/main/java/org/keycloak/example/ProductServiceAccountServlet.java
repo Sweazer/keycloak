@@ -103,7 +103,7 @@ public abstract class ProductServiceAccountServlet extends HttpServlet {
         HttpClient client = getHttpClient();
 
         try {
-            HttpPost post = new HttpPost(deployment.getTokenUrl());
+            HttpPost post = new HttpPost(deployment.getCodeUrl());
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
             formparams.add(new BasicNameValuePair(OAuth2Constants.GRANT_TYPE, OAuth2Constants.CLIENT_CREDENTIALS));
 
