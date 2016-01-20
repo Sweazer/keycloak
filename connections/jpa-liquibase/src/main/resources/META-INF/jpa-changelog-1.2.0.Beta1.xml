@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet author="Moritz Becker" id="pre-1.2.0.Beta1">
+    	<sql>
+    		<!-- SELECT * INTO TABLE CLIENT_SESSION_AUTH_STATUS_BACKUP FROM CLIENT_SESSION_AUTH_STATUS; -->
+    		
+    		<!-- SELECT * INTO TABLE CLIENT_SESSION_ROLE_BACKUP FROM CLIENT_SESSION_ROLE; -->
+    		
+    		<!-- SELECT * INTO TABLE CLIENT_SESSION_PROT_MAPPER_BACKUP FROM CLIENT_SESSION_PROT_MAPPER; -->
+    		
+    		<!-- SELECT * INTO TABLE CLIENT_SESSION_NOTE_BACKUP FROM CLIENT_SESSION_NOTE; -->
+    		
+    		SELECT * INTO TABLE CLIENT_SESSION_BACKUP FROM CLIENT_SESSION;
+    		
+    		<!-- SELECT * INTO TABLE USER_SESSION_NOTE_BACKUP FROM USER_SESSION_NOTE; -->
+    		
+    		SELECT * INTO TABLE USER_SESSION_BACKUP FROM USER_SESSION;
+    	</sql>
+    </changeSet>
+    
     <changeSet author="psilva@redhat.com" id="1.2.0.Beta1">
         <delete tableName="CLIENT_SESSION_ROLE"/>
         <delete tableName="CLIENT_SESSION_NOTE"/>

@@ -101,5 +101,46 @@
 
     <changeSet author="mposolda@redhat.com" id="1.6.1">
     </changeSet>
+    
+    <changeSet author="Moritz Becker" id="1.6.2">
+        
+        <!-- restore backed up user sessions - THIS IS ONLY CORRECT WHEN MIGRATING STRAIGHT FROM 1.1.0.Final!! -->
+        <sql>
+        	INSERT INTO OFFLINE_USER_SESSION
+      		SELECT id as user_session_id, user_id, realm_id, last_session_refresh, '0' as offline_flag, 
+				'{"ipAddress":"' || backup.ip_address || '"' ||
+				',"authMethod":"' || backup.auth_method || '"' ||
+				',"rememberMe":' || backup.remember_me ||
+				',"started":' || backup.started ||
+				'}' as data
+       		FROM  USER_SESSION_BACKUP backup;
+        </sql>
+        <sql>
+        	INSERT INTO OFFLINE_CLIENT_SESSION
+			SELECT id as client_session_id, session_id as user_session_id, client_id, '0' as offline_flag, timestamp,
+					'{"authMethod":"' || backup.auth_method || '"' ||
+					',"protocolMappers": []' ||
+					',"roles":'  || (SELECT COALESCE(json_agg(r.role_id)::text, '[]') FROM CLIENT_SESSION_ROLE r WHERE r.client_session = backup.id) ||
+					',"notes":{' || (SELECT COALESCE(string_agg('"' || n.name || '":"' || n.value || '"', ',')::text, '') FROM CLIENT_SESSION_NOTE n WHERE n.client_session = backup.id) || '}' ||
+					',"userSessionNotes":{}' ||
+					',"executionStatus":{}' ||
+					',"action":""' ||
+					',"requiredActions":[]' ||
+					'}' as data
+			FROM  CLIENT_SESSION_BACKUP backup
+			WHERE backup.session_id IS NOT NULL;
+        </sql>
+    </changeSet>
+    
+    <!-- apply once confident that session restore works -->
+<!--     <changeSet author="Moritz Becker" id="1.6.2"> -->
+<!--     	<dropTable tableName="CLIENT_SESSION_AUTH_STATUS_BACKUP"/> -->
+<!--     	<dropTable tableName="CLIENT_SESSION_ROLE_BACKUP"/> -->
+<!--     	<dropTable tableName="CLIENT_SESSION_PROT_MAPPER_BACKUP"/> -->
+<!--     	<dropTable tableName="CLIENT_SESSION_NOTE_BACKUP"/> -->
+<!--     	<dropTable tableName="CLIENT_SESSION_BACKUP"/> -->
+<!--     	<dropTable tableName="USER_SESSION_NOTE_BACKUP"/> -->
+<!--     	<dropTable tableName="USER_SESSION_BACKUP"/> -->
+<!--     </changeSet> -->
 
 </databaseChangeLog>

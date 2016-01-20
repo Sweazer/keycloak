@@ -153,4 +153,14 @@
         </modifySql>
 
     </changeSet>
+    
+    <!-- Migrate registrationDate user attributes -->
+    <changeSet id="1.4.1" author="Moritz Becker">
+    	<sql>
+    		UPDATE USER_ENTITY u SET created_timestamp = (
+    			SELECT attr.value::bigint FROM USER_ATTRIBUTE attr
+    			WHERE attr.user_id = u.id and attr.name = 'registrationDate'
+    		);
+    	</sql>
+    </changeSet>
 </databaseChangeLog>
