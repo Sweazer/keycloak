@@ -20,12 +20,12 @@
     <parent>
         <groupId>org.keycloak</groupId>
         <artifactId>keycloak-wildfly-parent</artifactId>
-        <version>1.8.0.CR1</version>
+        <version>1.8.0.CR1-sweazer</version>
     </parent>
 
     <artifactId>keycloak-wildfly-adduser</artifactId>
     <name>Keycloak WildFly Add User Script</name>
-    <description/>
+    <description />
     <packaging>jar</packaging>
 
     <dependencies>

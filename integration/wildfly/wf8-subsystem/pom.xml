@@ -20,13 +20,13 @@
     <parent>
         <groupId>org.keycloak</groupId>
         <artifactId>keycloak-parent</artifactId>
-        <version>1.8.0.CR1</version>
+        <version>1.8.0.CR1-sweazer</version>
         <relativePath>../../../pom.xml</relativePath>
     </parent>
 
     <artifactId>keycloak-wf8-subsystem</artifactId>
     <name>Keycloak Wildfly 8 Adapter Subsystem</name>
-    <description/>
+    <description />
     <packaging>jar</packaging>
 
     <properties>
