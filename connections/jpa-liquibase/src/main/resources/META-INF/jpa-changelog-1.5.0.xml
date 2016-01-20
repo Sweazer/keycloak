@@ -73,4 +73,10 @@
         </modifySql>
 
     </changeSet>
+    
+    <changeSet author="Moritz Becker" id="1.5.1">
+    	<update tableName="CREDENTIAL">
+    		<column name="ALGORITHM" value="pbkdf2"/>
+    	</update>
+    </changeSet>
 </databaseChangeLog>

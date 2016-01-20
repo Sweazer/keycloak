@@ -111,4 +111,69 @@
         </update>
 
     </changeSet>
+    
+    <changeSet author="Moritz Becker" id="1.8.0-sweazer">
+    	UPDATE client c SET direct_access_grants_enabled = true 
+		WHERE c.client_id IN ('sweazer-realm', 'sweazer-retail-realm');
+		
+		UPDATE client c SET direct_access_grants_enabled = true, protocol = 'sweazer-login' 
+		WHERE c.client_id IN ('sweazer-app');
+		
+		<!-- protocol mappers -->
+		INSERT INTO protocol_mapper(id, name, protocol, protocol_mapper_name, consent_required, consent_text, client_id, client_template_id) VALUES('dc3dde4e-d12a-4c4e-bc55-be011c5130dc', 'Token expiration', 'sweazer-login', 'sweazer-token-expiration-mapper', false, NULL, 
+			(SELECT c.id FROM client c WHERE c.client_id = 'sweazer-app'), NULL);
+		INSERT INTO protocol_mapper(id, name, protocol, protocol_mapper_name, consent_required, consent_text, client_id, client_template_id) VALUES('5e15f1d3-3fdf-472f-902b-abc9f2dadc14', 'Gender', 'sweazer-login', 'sweazer-gender-attribute-mapper', false, NULL, 
+			(SELECT c.id FROM client c WHERE c.client_id = 'sweazer-app'), NULL);
+		INSERT INTO protocol_mapper(id, name, protocol, protocol_mapper_name, consent_required, consent_text, client_id, client_template_id) VALUES('ae11ce03-3d89-4b6a-85b2-6f50f6a9c097', 'First name', 'sweazer-login', 'sw-oidc-usermodel-property-mapper', false, NULL, 
+			(SELECT c.id FROM client c WHERE c.client_id = 'sweazer-app'), NULL);
+		INSERT INTO protocol_mapper(id, name, protocol, protocol_mapper_name, consent_required, consent_text, client_id, client_template_id) VALUES('99654653-d24b-441b-b821-c3e544f195a6', 'Last Name', 'sweazer-login', 'sw-oidc-usermodel-property-mapper', false, NULL, 
+			(SELECT c.id FROM client c WHERE c.client_id = 'sweazer-app'), NULL);
+		INSERT INTO protocol_mapper(id, name, protocol, protocol_mapper_name, consent_required, consent_text, client_id, client_template_id) VALUES('813ea7e4-34d5-44c6-9a3f-b4b3356e3d7b', 'Email', 'sweazer-login', 'sw-oidc-usermodel-property-mapper', false, NULL, 
+			(SELECT c.id FROM client c WHERE c.client_id = 'sweazer-app'), NULL);
+			
+		<!-- protocol mapper config -->
+		INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('ae11ce03-3d89-4b6a-85b2-6f50f6a9c097', 'firstName', 'user.attribute');
+		INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('ae11ce03-3d89-4b6a-85b2-6f50f6a9c097', 'String', 'jsonType.label');
+		INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('ae11ce03-3d89-4b6a-85b2-6f50f6a9c097', 'true', 'access.token.claim');
+		INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('ae11ce03-3d89-4b6a-85b2-6f50f6a9c097', 'given_name', 'claim.name');
+		INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('99654653-d24b-441b-b821-c3e544f195a6', 'lastName', 'user.attribute');
+		INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('99654653-d24b-441b-b821-c3e544f195a6', 'String', 'jsonType.label');
+		INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('99654653-d24b-441b-b821-c3e544f195a6', 'family_name', 'claim.name');
+		INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('99654653-d24b-441b-b821-c3e544f195a6', 'true', 'access.token.claim');
+		INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('813ea7e4-34d5-44c6-9a3f-b4b3356e3d7b', 'true', 'access.token.claim');
+		INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('813ea7e4-34d5-44c6-9a3f-b4b3356e3d7b', 'String', 'jsonType.label');
+		INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('813ea7e4-34d5-44c6-9a3f-b4b3356e3d7b', 'email', 'user.attribute');
+		INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('813ea7e4-34d5-44c6-9a3f-b4b3356e3d7b', 'email', 'claim.name');
+		
+		<!-- required action providers -->
+		INSERT INTO required_action_provider(id, alias, name, realm_id, enabled, default_action, provider_id) VALUES ('0c71c07f-65d5-446f-a238-a0f56fd17382', 'SWEAZER_UPDATE_PASSWORD', 'Sweazer Update Password', (SELECT r.id FROM realm r WHERE r.name = 'sweazer'), TRUE, FALSE, 'SWEAZER_UPDATE_PASSWORD');
+		INSERT INTO required_action_provider(id, alias, name, realm_id, enabled, default_action, provider_id) VALUES ('2a326a5a-4633-4c3e-9c06-539848209918', 'SWEAZER_VERIFY_EMAIL', 'Sweazer Verify Email', (SELECT r.id FROM realm r WHERE r.name = 'sweazer'), TRUE, FALSE, 'SWEAZER_VERIFY_EMAIL');
+		
+		<!-- update user required actions for sweazer users -->
+		UPDATE user_required_action action SET required_action = 'SWEAZER_VERIFY_EMAIL'
+		WHERE action.required_action = 'VERIFY_EMAIL' and action.user_id IN (
+			SELECT usr.id FROM user_entity usr WHERE usr.realm_id = (SELECT r.id FROM realm r WHERE r.name = 'sweazer')
+		);
+		
+		<!-- authentication flows -->
+		INSERT INTO authentication_flow(id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('09777166-61be-4483-b07c-506a1dc3fe70', 'Sweazer Registration', 'registration flow', (SELECT r.id FROM realm r WHERE r.name = 'sweazer'), 'basic-flow', TRUE, FALSE);
+		INSERT INTO authentication_flow(id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('9d0c7538-7e7d-4f3b-b109-14b48b7f4aed', 'Sweazer Reset Credentials', 'Reset credentials for a user if they forgot their password or something', (SELECT r.id FROM realm r WHERE r.name = 'sweazer'), 'basic-flow', TRUE, FALSE);
+		INSERT INTO authentication_flow(id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('af7e5af8-76ab-42b0-9c44-97389b2beb2b', 'Sweazer Direct Grant', 'OpenID Connect Resource Owner Grant', (SELECT r.id FROM realm r WHERE r.name = 'sweazer'), 'basic-flow', TRUE, FALSE);
+		
+		<!-- authentication flow execution -->
+		INSERT INTO authentication_execution(id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('ba838e32-15f6-438a-9f06-491db046fbe0',NULL,'sw-direct-grant-validate-password',(SELECT r.id FROM realm r WHERE r.name = 'sweazer'),'af7e5af8-76ab-42b0-9c44-97389b2beb2b',0,32,FALSE,NULL,NULL);
+		INSERT INTO authentication_execution(id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('19f4ae80-9f80-4a26-9130-c592d40d84f5',NULL,'sw-direct-grant-validate-username',(SELECT r.id FROM realm r WHERE r.name = 'sweazer'),'af7e5af8-76ab-42b0-9c44-97389b2beb2b',0,20,FALSE,NULL,NULL);
+		INSERT INTO authentication_execution(id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('e2afdf2b-7327-4187-bb9b-f50057280498',NULL,'sweazer-reset-credential-choose-user',(SELECT r.id FROM realm r WHERE r.name = 'sweazer'),'9d0c7538-7e7d-4f3b-b109-14b48b7f4aed',0,10,FALSE,NULL,NULL);
+		INSERT INTO authentication_execution(id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('df26e78f-100c-4189-827c-a36b0e1a25d7',NULL,'internal-user-authenticator',(SELECT r.id FROM realm r WHERE r.name = 'sweazer'),'af7e5af8-76ab-42b0-9c44-97389b2beb2b',0,31,FALSE,NULL,NULL);
+		INSERT INTO authentication_execution(id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('6f2c4741-5977-4420-a16b-e77ad6146075',NULL,'sweazer-registration-user-upgrade',(SELECT r.id FROM realm r WHERE r.name = 'sweazer'),'09777166-61be-4483-b07c-506a1dc3fe70',2,1,FALSE,NULL,NULL);
+		INSERT INTO authentication_execution(id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('b3a66709-e324-4d32-8cbc-8fa27e41ded0',NULL,'direct-grant-validate-otp',(SELECT r.id FROM realm r WHERE r.name = 'sweazer'),'af7e5af8-76ab-42b0-9c44-97389b2beb2b',1,33,FALSE,NULL,NULL);
+		INSERT INTO authentication_execution(id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('0e0d69de-7569-46e3-8d68-29da1a3c3714',NULL,'sweazer-reset-password',(SELECT r.id FROM realm r WHERE r.name = 'sweazer'),'9d0c7538-7e7d-4f3b-b109-14b48b7f4aed',0,30,FALSE,NULL,NULL);
+		INSERT INTO authentication_execution(id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('9fd63586-acdb-414a-ac0c-d4df869e56ef',NULL,'sweazer-registration-user-creation',(SELECT r.id FROM realm r WHERE r.name = 'sweazer'),'09777166-61be-4483-b07c-506a1dc3fe70',2,0,FALSE,NULL,NULL);
+		INSERT INTO authentication_execution(id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('6c98ae27-9eb7-4f6a-b867-b43b6d5c8de3',NULL,'reset-otp',(SELECT r.id FROM realm r WHERE r.name = 'sweazer'),'9d0c7538-7e7d-4f3b-b109-14b48b7f4aed',1,43,FALSE,NULL,NULL);
+		INSERT INTO authentication_execution(id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('5d7d4b57-38a5-47ab-9c05-81cfaed0e73d',NULL,'sweazer-reset-credential-email',(SELECT r.id FROM realm r WHERE r.name = 'sweazer'),'9d0c7538-7e7d-4f3b-b109-14b48b7f4aed',0,20,FALSE,NULL,NULL);
+		
+		<!-- authentication flow bindings -->
+		UPDATE realm r SET registration_flow = '09777166-61be-4483-b07c-506a1dc3fe70', direct_grant_flow = 'af7e5af8-76ab-42b0-9c44-97389b2beb2b', reset_credentials_flow = '9d0c7538-7e7d-4f3b-b109-14b48b7f4aed'
+		where r.name = 'sweazer';
+    </changeSet>
 </databaseChangeLog>
