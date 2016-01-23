@@ -124,9 +124,9 @@
     <changeSet author="Moritz Becker" id="1.8.0-sweazer">
     	<sql>
 	    	UPDATE client c SET direct_access_grants_enabled = true 
-			WHERE c.client_id IN ('sweazer-realm', 'sweazer-retail-realm');
+			WHERE c.client_id IN ('sweazer-app', 'sweazer-realm', 'sweazer-retail-realm');
 			
-			UPDATE client c SET direct_access_grants_enabled = true, protocol = 'sweazer-login' 
+			UPDATE client c SET consent_required = false,  protocol = 'sweazer-login'
 			WHERE c.client_id IN ('sweazer-app');
 			
 			<!-- protocol mappers -->
