@@ -146,6 +146,8 @@
 				(SELECT c.id FROM client c WHERE c.client_id = 'sweazer-app'), NULL);
 			INSERT INTO protocol_mapper(id, name, protocol, protocol_mapper_name, consent_required, consent_text, client_id, client_template_id) VALUES('813ea7e4-34d5-44c6-9a3f-b4b3356e3d7b', 'Email', 'sweazer-login', 'sw-oidc-usermodel-property-mapper', false, NULL, 
 				(SELECT c.id FROM client c WHERE c.client_id = 'sweazer-app'), NULL);
+			INSERT INTO protocol_mapper(id, name, protocol, protocol_mapper_name, consent_required, consent_text, client_id, client_template_id) VALUES('2384a0c2-da56-4558-8302-a69f086f80f5', 'Username', 'sweazer-login', 'sw-oidc-usermodel-property-mapper', false, NULL, 
+				(SELECT c.id FROM client c WHERE c.client_id = 'sweazer-app'), NULL);
 				
 			<!-- protocol mapper config -->
 			INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('ae11ce03-3d89-4b6a-85b2-6f50f6a9c097', 'firstName', 'user.attribute');
@@ -160,7 +162,12 @@
 			INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('813ea7e4-34d5-44c6-9a3f-b4b3356e3d7b', 'String', 'jsonType.label');
 			INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('813ea7e4-34d5-44c6-9a3f-b4b3356e3d7b', 'email', 'user.attribute');
 			INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('813ea7e4-34d5-44c6-9a3f-b4b3356e3d7b', 'email', 'claim.name');
-			
+			INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('2384a0c2-da56-4558-8302-a69f086f80f5', 'true', 'access.token.claim');
+			INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('2384a0c2-da56-4558-8302-a69f086f80f5', 'preferred_username', 'claim.name');
+			INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('2384a0c2-da56-4558-8302-a69f086f80f5', 'false', 'id.token.claim');
+			INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('2384a0c2-da56-4558-8302-a69f086f80f5', 'String', 'jsonType.label');
+			INSERT INTO protocol_mapper_config(protocol_mapper_id, value, name) VALUES ('2384a0c2-da56-4558-8302-a69f086f80f5', 'username', 'user.attribute');
+
 			<!-- required action providers -->
 			INSERT INTO required_action_provider(id, alias, name, realm_id, enabled, default_action, provider_id) VALUES ('0c71c07f-65d5-446f-a238-a0f56fd17382', 'SWEAZER_UPDATE_PASSWORD', 'Sweazer Update Password', (SELECT r.id FROM realm r WHERE r.name = 'sweazer'), TRUE, FALSE, 'SWEAZER_UPDATE_PASSWORD');
 			INSERT INTO required_action_provider(id, alias, name, realm_id, enabled, default_action, provider_id) VALUES ('2a326a5a-4633-4c3e-9c06-539848209918', 'SWEAZER_VERIFY_EMAIL', 'Sweazer Verify Email', (SELECT r.id FROM realm r WHERE r.name = 'sweazer'), TRUE, FALSE, 'SWEAZER_VERIFY_EMAIL');
