@@ -201,7 +201,9 @@
 			INSERT INTO authentication_execution(id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('6c98ae27-9eb7-4f6a-b867-b43b6d5c8de3',NULL,'reset-otp',(SELECT r.id FROM realm r WHERE r.name = 'sweazer'),'9d0c7538-7e7d-4f3b-b109-14b48b7f4aed',1,43,FALSE,NULL,NULL);
 			INSERT INTO authentication_execution(id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('5d7d4b57-38a5-47ab-9c05-81cfaed0e73d',NULL,'sweazer-reset-credential-email',(SELECT r.id FROM realm r WHERE r.name = 'sweazer'),'9d0c7538-7e7d-4f3b-b109-14b48b7f4aed',0,20,FALSE,NULL,NULL);
 		</sql>
-		<sql>
+    </changeSet>
+    <changeSet author="Moritz Becker" id="1.8.0-sweazer2">
+    	<sql>
 			<comment>authentication flow bindings</comment>			
 			UPDATE realm r SET registration_flow = '09777166-61be-4483-b07c-506a1dc3fe70', direct_grant_flow = 'af7e5af8-76ab-42b0-9c44-97389b2beb2b', reset_credentials_flow = '9d0c7538-7e7d-4f3b-b109-14b48b7f4aed'
 			WHERE r.name = 'sweazer';
