@@ -161,6 +161,7 @@
     			SELECT attr.value::bigint FROM USER_ATTRIBUTE attr
     			WHERE attr.user_id = u.id and attr.name = 'registrationDate'
     		);
+    		DELETE FROM USER_ATTRIBUTE attr WHERE attr.name = 'registrationDate';
     	</sql>
     </changeSet>
 </databaseChangeLog>
