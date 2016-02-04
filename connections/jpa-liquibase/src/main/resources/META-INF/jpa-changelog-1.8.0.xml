@@ -205,6 +205,10 @@
 			<comment>user role mappings</comment>
 			INSERT INTO user_role_mapping(role_id, user_id) VALUES((SELECT id FROM keycloak_role WHERE name = 'manage-users' AND realm_id = 'master' AND client = (SELECT id FROM client WHERE client_id = 'sweazer-realm' AND realm_id = 'master')), (SELECT id FROM user_entity WHERE username = 'sweazer-admin' and realm_id = 'master'));
 		</sql>
+		<sql>
+			<comment>realm</comment>
+			UPDATE realm SET reset_password_allowed = true WHERE name = 'sweazer';
+		</sql>
     </changeSet>
 	
 </databaseChangeLog>
