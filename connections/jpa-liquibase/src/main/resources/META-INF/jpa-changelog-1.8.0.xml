@@ -207,7 +207,9 @@
 		</sql>
 		<sql>
 			<comment>realm</comment>
-			UPDATE realm SET reset_password_allowed = true WHERE name = 'sweazer';
+			UPDATE realm SET reset_password_allowed = true, internationalization_enabled = true, default_locale = 'de',  WHERE name = 'sweazer';
+			INSERT INTO realm_supported_locales(realm_id, value) VALUES((SELECT id FROM realm WHERE name = 'sweazer'), 'de');
+			INSERT INTO realm_supported_locales(realm_id, value) VALUES((SELECT id FROM realm WHERE name = 'sweazer'), 'en');
 		</sql>
     </changeSet>
 	
