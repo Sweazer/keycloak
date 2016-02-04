@@ -203,7 +203,7 @@
 		</sql>
 		<sql>
 			<comment>user role mappings</comment>
-			INSERT INTO user_role_mapping(role_id, user_id) VALUES('c31478b7-068a-4f37-97bc-fb5ecbe0e104', 'e9012104-8ea4-4607-aa9e-40071d444f21');
+			INSERT INTO user_role_mapping(role_id, user_id) VALUES((SELECT id FROM keycloak_role WHERE name = 'manage-users' AND realm_id = 'master' AND client = (SELECT id FROM client WHERE client_id = 'sweazer-realm' AND realm_id = 'master')), (SELECT id FROM user_entity WHERE username = 'sweazer-admin' and realm_id = 'master'));
 		</sql>
     </changeSet>
 	
